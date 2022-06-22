@@ -1,17 +1,43 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './Navigation.scss'
 
 export default function Navigation() {
+
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const categories = [
+    {title: "Все", id: 1},
+    {title: "Мясные", id: 2},
+    {title: "Вегетарианская", id: 3},
+    {title: "Гриль", id: 4},
+    {title: "Острые", id: 5},
+    {title: "Закрытые", id: 6},
+  ];
+
+  const onClickCategories = (index) => {
+    (activeIndex === index) ? setActiveIndex(0) :  setActiveIndex(index);
+  }
+
+  const categoriesStyle = (index) => {
+    return activeIndex === index ? "categories__item categories__item_active" : "categories__item";
+  }
+
   return (
     <nav className="nav">
       <div className="categories">
         <ul className="categories__list">
-          <li className="categories__item categories__item_active">Все</li>
-          <li className="categories__item">Мясные</li>
-          <li className="categories__item">Вегетарианская</li>
-          <li className="categories__item">Гриль</li>
-          <li className="categories__item">Острые</li>
-          <li className="categories__item">Закрытые</li>
+          {
+            categories.map(
+              (item, index) =>
+                <li
+                  key={item.id}
+                  onClick={() => onClickCategories(index)}
+                  className={categoriesStyle(index)}
+                >
+                  {item.title}
+                </li>
+            )
+          }
         </ul>
       </div>
       <div className="sort">

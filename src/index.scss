@@ -1,41 +1,7 @@
-* {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  outline: none;
-  font-family: 'Nunito', sans-serif, Roboto, system-ui, Tahoma, sans-serif;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box
-}
-
-body {
-  color: #232323
-}
-
-a, span, p, b, h1, h2, h3, h4, h5 {
-  color: #232323
-}
-
-h1 {
-  font-size: 48px
-}
-
-h2 {
-  font-weight: 600;
-  font-size: 28px;
-  line-height: 30px
-}
-
-a {
-  text-decoration: none
-}
-
-body, html {
-  max-width: 100%;
-  overflow-x: hidden;
-}
+@import "reset";
 
 .wrapper {
+  font-family: 'Nunito', sans-serif, Roboto, system-ui, Tahoma;
   box-sizing: content-box;
   margin: 0 auto;
   width: 100%;
@@ -139,7 +105,7 @@ body, html {
           margin-right: 5px;
         }
 
-        .card__pizzaNum {
+        .card__count {
           display: flex;
           justify-content: center;
           width: 26px;
@@ -149,6 +115,7 @@ body, html {
           text-align: center;
           color: #F3F3F3;
           padding-top: 1px;
+          font-style: normal;
         }
       }
     }

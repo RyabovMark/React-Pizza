@@ -7,7 +7,11 @@
   .main__container {
     margin: 0 -25px;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     flex-wrap: wrap;
+
+    .pizzaLoader{
+      margin: 0 30px;
+    }
   }
 }

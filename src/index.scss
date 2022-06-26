@@ -1,20 +1,19 @@
 @import "reset";
 
 .wrapper {
-  font-family: 'Nunito', sans-serif, Roboto, system-ui, Tahoma;
-  box-sizing: content-box;
-  margin: 0 auto;
+  font-family: 'Nunito', sans-serif, Roboto, system-ui, Tahoma;;
   width: 100%;
   background: #FFDF8C;
+  padding: 50px 0;
 
   .container {
     margin: 0 auto;
-    max-width: 1340px;
+    max-width: 1400px;
     height: 100%;
     background: #FFFFFF;
     box-shadow: 0 15px 20px rgba(0, 0, 0, 0.03);
     border-radius: 20px;
-    padding: 25px;
+    padding: 40px;
 
     .btn {
       width: 200px;
@@ -28,39 +27,35 @@
       align-items: center;
       font-weight: 700;
       font-size: 16px;
+      font-style: normal;
 
       &.btn_header {
-        a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        span {
+          color: #FFFFFF;
+        }
+
+        .header__price {
+          border-right: 1px solid #FFFFFF;
+          padding-right: 5px;
+          margin-right: 5px;
+        }
+
+        .header__num {
+          margin-left: 5px;
+        }
+
+        .header__cartImg {
           display: flex;
-          justify-content: center;
           align-items: center;
+          padding-bottom: 2px;
 
-          span {
-            font-style: normal;
-            color: #FFFFFF;
-            font-weight: 700;
-            font-size: 16px;
-          }
-
-          .header__price {
-            border-right: 1px solid #FFFFFF;
-            padding-right: 5px;
-            margin-right: 5px;
-          }
-
-          .header__num {
-            margin-left: 5px;
-          }
-
-          .header__cartImg {
-            display: flex;
-            align-items: center;
-            padding-bottom: 2px;
-
-            .header__icon {
-              width: 18px;
-              height: 18px;
-            }
+          .header__icon {
+            width: 18px;
+            height: 18px;
           }
         }
       }

@@ -18,7 +18,7 @@ export default function Card({
   const typesArr = ["Традиционное", "Тонкое"];
 
   const onClickType = (index) => {
-    (pizzaType === index) ? setPizzaType(0) :  setPizzaType(index);
+    (pizzaType === index) ? setPizzaType(0) : setPizzaType(index);
   }
 
   const typeStyle = (index) => {
@@ -26,7 +26,7 @@ export default function Card({
   }
 
   const onClickSize = (index) => {
-    (pizzaSize === index) ? setPizzaSize(0) :  setPizzaSize(index);
+    (pizzaSize === index) ? setPizzaSize(0) : setPizzaSize(index);
   }
 
   const sizeStyle = (index) => {
@@ -37,10 +37,16 @@ export default function Card({
     return setPizzaCount(pizzaCount + 1);
   }
 
+  const imgSize = (pizzaSize) => {
+    return (pizzaSize === 0) ? "card__img card__img_small" :
+      (pizzaSize === 1) ? "card__img card__img_medium" : "card__img" +
+        " card__img_large"
+  }
+
   return (
-    <div key={id} id={id} className="card">
+    <div id={id} className="card">
       <div className="card__img">
-        <img src={imageUrl} alt="1"/>
+        <img className={imgSize(pizzaSize)} src={imageUrl} alt="1"/>
       </div>
       <h3>{name}</h3>
       <div className="card__options">

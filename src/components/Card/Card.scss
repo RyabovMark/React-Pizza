@@ -15,11 +15,13 @@
 
   .card__img {
     display: flex;
-    height: 260px;
-    flex: 1 0 auto;
+    flex: 0 0 auto;
     align-items: center;
+    justify-content: center;
+    height: 260px;
+    width: 260px;
+    padding-left: 5px;
     transition: 0.1s;
-    margin-left: 10px;
 
     &.card__img_small {
       width: 240px;

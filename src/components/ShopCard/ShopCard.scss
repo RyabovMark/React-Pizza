@@ -1,4 +1,4 @@
-  .shopCard {
+.shop-card {
   width: 100%;
   height: 140px;
   display: flex;
@@ -7,30 +7,50 @@
   border-top: 1px solid #F4F4F4;
   padding: 30px 0;
 
-  img {
-    height: 80px;
-    width: 80px;
-    margin-right: 15px;
+  .shop-card__logo {
+    display: flex;
+    align-items: center;
+    @media (max-width: 700px) {
+
+    }
+    .shop-card__pizzaLogo {
+      height: 80px;
+      width: 80px;
+      @media (max-width: 700px) {
+        height: 50px;
+        width: 50px;
+      }
+    }
   }
 
-  .shopCard__descriptions {
+  .shop-card__descriptions {
     display: flex;
     flex-direction: column;
+    @media (max-width: 550px) {
+
+    }
+
 
     h1 {
       font-weight: 700;
       font-size: 22px;
       color: #000000;
+      @media (max-width: 700px) {
+        font-size: 16px;
+      }
     }
 
     span {
       font-weight: 400;
-      font-size: 18px;
+      font-size: 20px;
       color: #8D8D8D;
+      @media (max-width: 700px) {
+        font-size: 12px;
+      }
     }
   }
 
-  .shopCard__amount {
+  .shop-card__amount {
     display: flex;
     align-items: center;
 
@@ -39,25 +59,40 @@
       width: 32px;
       margin: 0 12px;
       cursor: pointer;
+      @media (max-width: 700px) {
+        height: 20px;
+        width: 20px;
+        margin: 0 5px;
+      }
     }
 
     span {
       font-weight: 700;
       font-size: 22px;
       color: #000000;
+      @media (max-width: 700px) {
+        font-size: 16px;
+      }
     }
   }
 
-  .shopCard__price {
+  .shop-card__price {
     font-weight: 700;
     font-size: 22px;
     color: #000000;
     cursor: pointer;
+    @media (max-width: 700px) {
+      font-size: 16px;
+    }
   }
 
-  .shopCard__remove {
+  .shop-card__remove {
     height: 32px;
     width: 32px;
     cursor: pointer;
+    @media (max-width: 700px) {
+      height: 20px;
+      width: 20px;
+    }
   }
 }

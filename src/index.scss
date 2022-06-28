@@ -4,7 +4,10 @@
   font-family: 'Nunito', sans-serif, Roboto, system-ui, Tahoma;;
   width: 100%;
   background: #FFDF8C;
-  padding: 50px 0;
+  padding: 50px;
+  @media (max-width: 850px) {
+    padding: 15px;
+  }
 
   .container {
     margin: 0 auto;
@@ -14,6 +17,10 @@
     box-shadow: 0 15px 20px rgba(0, 0, 0, 0.03);
     border-radius: 20px;
     padding: 40px;
+
+    @media (max-width: 550px) {
+      padding: 10px;
+    }
 
     .btn {
       width: 200px;
@@ -73,6 +80,7 @@
       &.btn_white {
         border: 1px solid #D3D3D3;
         background: none;
+        margin-bottom: 10px;
 
         span {
           color: #CACACA;
@@ -116,3 +124,5 @@
     }
   }
 }
+
+

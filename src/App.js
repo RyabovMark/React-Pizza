@@ -14,7 +14,7 @@ function App() {
     fetch('https://62b626ae42c6473c4b403a58.mockapi.io/pizzas')
       .then(res => res.json())
       .then(arr => setItems(arr))
-      .then(() => setIsLoading(false))
+      .then(() => setIsLoading(false));
   }, [])
 
   return (

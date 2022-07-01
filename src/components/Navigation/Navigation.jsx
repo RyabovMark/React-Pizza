@@ -1,43 +1,35 @@
 import React, {useState} from 'react';
 import './Navigation.scss'
 
-export default function Navigation() {
+export default function Navigation({
+                                     categoriesId,
+                                     sortType,
+                                     onClickCategories,
+                                     categoriesStyle,
+                                     onClickSort,
+                                     onClickFilter
+                                   }) {
 
-  const [filterClass, setFilterClass] = useState(0);
   const [isVisiblePopup, setIsVisiblePopup] = useState(false);
   const [isVisibleFilter, setIsVisibleFilter] = useState(false);
-  const [sortClass, setSortClass] = useState(0);
 
   const categories = ["Все", "Мясные", "Вегетарианская", "Гриль", "Острые", "Закрытые"];
+  const sortList = [
+    {name:"Популярности (DESC)", sortProperty: "rating", id: 0},
+    {name:"Популярности (ASC)", sortProperty: "-rating", id: 1},
+    {name:"Цене (DESC)", sortProperty: "price", id: 2},
+    {name:"Цене (ASC)", sortProperty: "-price", id: 3},
+    {name:"Алфавиту (DESC)", sortProperty: "name", id: 4},
+    {name:"Алфавиту (ASC)", sortProperty: "-name", id: 5}
+    ];
 
-  const sortList = ["Популярности", "Цене", "Алфавиту"];
-
-  const onClickCategories = (index) => {
-    (filterClass === index) ? setFilterClass(0) : setFilterClass(index);
+  const arrowStyle = (state) => {
+    return state ? "sort__open-arrow" : 'sort__close-arrow'
   }
 
-  const categoriesStyle = (index) => {
-    return filterClass === index ? "categories__item categories__item_active" : "categories__item";
+  const sortStyle = (property) => {
+    return (property === sortType.sortProperty) ? "sort__item sort__item_active" : "sort__item";
   }
-
-  const arrowState = (setState) => {
-    return setState ? "sort__open-arrow" : 'sort__close-arrow'
-  }
-
-  const onClickSort = (index) => {
-    (sortClass === index) ? setSortClass(0) : setSortClass(index);
-    setIsVisiblePopup(false);
-  }
-
-  const onClickFilter = (index) => {
-    (filterClass === index) ? setFilterClass(0) : setFilterClass(index);
-    setIsVisibleFilter(false);
-  }
-
-  const sortStyle = (index, state) => {
-    return (state === index) ? "sort__item sort__item_active" : "sort__item";
-  }
-
 
   return (
     <nav className="nav">
@@ -61,7 +53,7 @@ export default function Navigation() {
         <div className="sort__label">
           <div className="sort__img">
             <img
-              className={arrowState(isVisiblePopup)}
+              className={arrowStyle(isVisiblePopup)}
               src="img/bottomArrow.svg"
               alt="bottomArrow"
             />
@@ -72,7 +64,7 @@ export default function Navigation() {
               className='sort__choice'
               onClick={() => setIsVisiblePopup(!isVisiblePopup)}
             >
-              {sortList[sortClass]}
+              {sortType.name}
             </span>
           </div>
         </div>
@@ -81,13 +73,13 @@ export default function Navigation() {
           <div className="sort__popup">
             <ul className="sort__list">
               {
-                sortList.map((item, index) => (
+                sortList.map((obj) => (
                   <li
-                    key={index}
-                    className={sortStyle(index, sortClass)}
-                    onClick={() => onClickSort(index)}
+                    key={obj.id}
+                    className={sortStyle(obj.sortProperty)}
+                    onClick={() => onClickSort(obj, setIsVisiblePopup)}
                   >
-                    <span>{item}</span>
+                    <span>{obj.name}</span>
                   </li>
                 ))
               }
@@ -99,7 +91,7 @@ export default function Navigation() {
         <div className="sort__label">
           <div className="sort__img">
             <img
-              className={arrowState(isVisibleFilter)}
+              className={arrowStyle(isVisibleFilter)}
               src="img/bottomArrow.svg"
               alt="bottomArrow"
             />
@@ -110,7 +102,7 @@ export default function Navigation() {
               className='sort__choice'
               onClick={() => setIsVisibleFilter(!isVisibleFilter)}
             >
-              {categories[filterClass]}
+              {categories[categoriesId]}
             </span>
           </div>
         </div>
@@ -122,8 +114,8 @@ export default function Navigation() {
                 categories.map((item, index) => (
                   <li
                     key={index}
-                    className={sortStyle(index, filterClass)}
-                    onClick={() => onClickFilter(index)}
+                    className={sortStyle(index, categoriesId)}
+                    onClick={() => onClickFilter(index, setIsVisibleFilter)}
                   >
                     <span>{item}</span>
                   </li>

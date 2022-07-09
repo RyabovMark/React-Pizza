@@ -1,75 +1,50 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useContext} from "react";
 import Card from "../Card/Card";
-import "./Main.scss"
+import "./Home.scss"
 import Loader from "../Data/Loader";
 import Navigation from "../Navigation/Navigation";
+import Pagination from "../Pagination/Pagination";
+import {AppContext} from "../../App";
+import {useSelector} from "react-redux";
+import axios from "axios";
+
 
 export default function Home() {
+  const {searchValue} = useContext(AppContext)
+  const {categoriesId, sortType} = useSelector(state => state.filter);
+
   const [items, setItems] = useState([]);
-  const [categoriesId, setCategoriesId] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [sortType, setSortType] = useState(
-    {name: "Популярности", sortProperty: "rating", id: 0}
-  );
-
-  const onClickCategories = (index) => {
-    (categoriesId === index) ? setCategoriesId(0) : setCategoriesId(index);
-  }
-
-  const categoriesStyle = (index) => {
-    return categoriesId === index ? "categories__item categories__item_active" : "categories__item";
-  }
-
-  const onClickSort = (obj, state) => {
-    (sortType === obj) ? setSortType({
-        name: "Популярности",
-        sortProperty: "rating",
-        id: 0
-      })
-      : setSortType(obj);
-    state(false);
-  }
-
-  const onClickFilter = (index, state) => {
-    (categoriesId === index) ? setCategoriesId(0) : setCategoriesId(index);
-    state(false);
-  }
+  const [currentPage, setCurrentPage] = useState(1);
 
   const order = sortType.sortProperty.includes('-') ? 'asc' : 'desc';
   const sortBy = sortType.sortProperty.replace('-', '');
-  const category =  categoriesId > 0 ? `category=${categoriesId}` : '';
+  const category = categoriesId > 0 ? `category=${categoriesId}` : '';
+  const numPage = searchValue === '' ? `page=${currentPage}&limit=3&` : '';
+  const search = searchValue > 0 ? `&search=${searchValue}` : '';
 
   useEffect(() => {
-    setIsLoading(true)
-    fetch(`https://62b626ae42c6473c4b403a58.mockapi.io/pizzas?${category}&sortBy=${sortBy}&order=${order}`
-    )
-      .then(res => res.json())
-      .then(arr => setItems(arr))
-      .then(() => setIsLoading(false));
-  }, [categoriesId, sortType]);
+    axios
+      .get(`https://62b626ae42c6473c4b403a58.mockapi.io/pizzas?${category}&${numPage}&sortBy=${sortBy}&order=${order}${search}`)
+      .then((response) => {
+          setItems(response.data);
+          setIsLoading(false);
+        });
+
+  }, [categoriesId, category, order, search, searchValue, sortBy, currentPage]);
 
   return (
     <>
-      <
-        Navigation
-        categoriesId={categoriesId}
-        setCategoriesId={setCategoriesId}
-        sortType={sortType}
-        setSortType={setSortType}
-        onClickCategories={(i) => onClickCategories(i)}
-        categoriesStyle={(i) => categoriesStyle(i)}
-        onClickSort={(o, s) => onClickSort(o, s)}
-        onClickFilter={(i, s) => onClickFilter(i, s)}
-      />
+      <Navigation/>
       <main className="main">
         <h2>Все пиццы</h2>
         <div className="main__container">
           {
-            isLoading ? Array(items.length)
+            isLoading ?
+              Array(8)
                 .fill({})
                 .map((_, index) => <Loader key={index}/>)
-              :
-              items.map(obj => (
+              : items.filter((item) => item.name.toLowerCase().includes(searchValue.toLowerCase())).map(obj => (
                 <
                   Card
                   id={obj.id}
@@ -85,6 +60,8 @@ export default function Home() {
               ))
           }
         </div>
+        {!searchValue &&
+          <Pagination onChangePage={number => setCurrentPage(number)}/>}
       </main>
     </>
   );

@@ -1,0 +1,35 @@
+.paginate {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+
+  li {
+    display: flex;
+
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 45px;
+      height: 45px;
+      margin: 0 5px;
+      border: 1px solid #EB5A1E;
+      border-radius: 50%;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+
+      &:hover {
+        background: #EB5A1E;
+        color: #F3F3F3;
+      }
+    }
+  }
+}
+
+.selected {
+  a {
+    background: #EB5A1E;
+    color: #F3F3F3;
+  }
+}

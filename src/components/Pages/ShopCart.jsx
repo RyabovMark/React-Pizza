@@ -9,11 +9,11 @@ export default function ShopCart() {
       <div className="shop-cart__container">
         <div className="shop-cart__header">
           <div className="shop-cart__title">
-            <img src="./img/greyCart.svg" alt="shopCart"/>
+            <img src="/img/greyCart.svg" alt="shopCart"/>
             <span>Корзина</span>
           </div>
           <div className="shop-cart__remove">
-            <img src="./img/trashBag.svg" alt="trashBag"/>
+            <img src="/img/trashBag.svg" alt="trashBag"/>
             <span>Очистить корзину</span>
           </div>
         </div>
@@ -31,7 +31,7 @@ export default function ShopCart() {
           </div>
           <Link to='/'>
             <div className="btn btn_white">
-              <img src="./img/back.svg" alt=""/>
+              <img src="/img/back.svg" alt=""/>
               <span>Вернуться назад</span>
             </div>
           </Link>
@@ -42,12 +42,12 @@ export default function ShopCart() {
         <div className="empty-cart">
           <div className="empty-cart__title">
             <h2>Корзина пустая </h2>
-            <img src="./img/smile.png" alt="smile"/>
+            <img src="/img/smile.png" alt="smile"/>
           </div>
           <span className="empty-cart__text">Вероятней всего, вы не заказывали ещё пиццу.
 Для того, чтобы заказать пиццу, перейди на главную страницу.
             </span>
-          <img className="empty-cart__img" src="./img/bayer.svg" alt="bayer"/>
+          <img className="empty-cart__img" src="/img/bayer.svg" alt="bayer"/>
           <Link to='/'>
             <div className="btn btn_black">
               Вернуться назад

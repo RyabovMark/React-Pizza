@@ -1,15 +1,30 @@
-import React, {useContext, useRef} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import './Search.scss';
-import {AppContext} from "../../App";
+import {useDispatch} from "react-redux";
+import { setSearchValue} from '../Redux/Slices/filterSlice';
+import debounce from "lodash.debounce"
 
 export default function Search() {
-  const {searchValue, setSearchValue} = useContext(AppContext);
-  const inputRef = useRef()
+  const [value, setValue] = useState('');
+  const inputRef = useRef();
+  const dispatch = useDispatch();
+
+  const updateSearchValue = useCallback(
+    debounce((str) => {
+      dispatch(setSearchValue(str));
+    }, 1000), []
+  );
 
   const onClickClear = () => {
-    setSearchValue('');
+    dispatch(setSearchValue(''))
+    setValue('')
     inputRef.current.focus();
-  }
+  };
+
+  const onCahngeInput = (event) => {
+    setValue(event.target.value);
+    updateSearchValue(event.target.value);
+  };
 
   return (
     <div className="search">
@@ -21,19 +36,19 @@ export default function Search() {
           id="XMLID_223_"/>
       </svg>
       <input className="search__input"
-             onChange={(e) => setSearchValue(e.target.value)}
-             type="text" placeholder="Поиск пиццы..." value={searchValue} ref={inputRef}/>
-      {searchValue && <svg onClick={() => onClickClear()}
-                           className="search__icon search__icon-close"
-                           id="Layer_1"
-                           version="1.1"
-                           viewBox="0 0 512 512" xml="preserve"
-                           xmlns="http://www.w3.org/2000/svg">
+             onChange={onCahngeInput}
+             type="text" placeholder="Поиск пиццы..." value={value}
+             ref={inputRef}/>
+      {value && <svg onClick={() => onClickClear()}
+                     className="search__icon search__icon-close"
+                     id="Layer_1"
+                     version="1.1"
+                     viewBox="0 0 512 512" xml="preserve"
+                     xmlns="http://www.w3.org/2000/svg">
         <path
           d="M437.5,386.6L306.9,256l130.6-130.6c14.1-14.1,14.1-36.8,0-50.9c-14.1-14.1-36.8-14.1-50.9,0L256,205.1L125.4,74.5  c-14.1-14.1-36.8-14.1-50.9,0c-14.1,14.1-14.1,36.8,0,50.9L205.1,256L74.5,386.6c-14.1,14.1-14.1,36.8,0,50.9  c14.1,14.1,36.8,14.1,50.9,0L256,306.9l130.6,130.6c14.1,14.1,36.8,14.1,50.9,0C451.5,423.4,451.5,400.6,437.5,386.6z"/>
       </svg>
       }
     </div>
-  )
-    ;
+  );
 }

@@ -1,28 +1,24 @@
 import React from 'react';
 import './index.scss';
-import Header from "./components/Header/Header";
 import Home from "./components/Pages/Home";
 import ShopCart from "./components/Pages/ShopCart";
 import {Route, Routes} from "react-router-dom";
-
-
-export const AppContext = React.createContext();
+import SinglePage from "./components/Pages/SinglePage";
+import Layout from "./components/Pages/Layout";
 
 function App() {
-  const [searchValue, setSearchValue] = React.useState('');
-
-    return (
-    <AppContext.Provider value={{searchValue, setSearchValue}}>
-      <div className="wrapper">
-        <div className="container">
-          <Header/>
-          <Routes>
-            <Route path='/' element={<Home/>}/>
-            <Route path='/shop-cart' element={<ShopCart/>}/>
-          </Routes>
-        </div>
+  return (
+    <div className="wrapper">
+      <div className="container">
+        <Routes>
+          <Route path='/' element={<Layout/>}>
+            <Route index element={<Home/>}/>
+            <Route path='shop-cart' element={<ShopCart/>}/>
+            <Route path='pizza/:id' element={<SinglePage/>}/>
+          </Route>
+        </Routes>
       </div>
-    </AppContext.Provider>
+    </div>
   );
 }
 

@@ -1,14 +1,23 @@
 import React from "react";
 import './Header.scss';
-import {Link} from "react-router-dom";
+import {NavLink, useLocation} from "react-router-dom";
 import Search from "../Search/Search";
-
+import {useSelector} from "react-redux";
+import {selectedCart} from "../Redux/Slices/cartSlice";
 
 export default function Header() {
+  const location = useLocation();
+  const {totalPrice, items} = useSelector(selectedCart);
+
+  const counter = items.reduce(((sum, current) => {
+      return sum + current.count
+    }
+  ), 0);
+
   return (
     <header className="header">
       <div className="header__container">
-        <Link to="/">
+        <NavLink to="/">
           <div className="header__logo">
             <div className="header__icon">
               <img src="/img/logo.svg" alt="logo"/>
@@ -18,19 +27,23 @@ export default function Header() {
               <p>самая вкусная пицца во вселенной</p>
             </div>
           </div>
-        </Link>
-        <Search/>
-          <Link to="/shop-cart">
-            <div className="btn btn_header">
-              <span className="header__price">520 руб.</span>
-              <div className="header__cartImg">
-                <img className="icon" src="/img/shopCart.svg"
-                     alt="shopCart"/>
+        </NavLink>
+        {location.pathname !== "/shop-cart" &&
+          <>
+            <Search/>
+            <NavLink to="/shop-cart">
+              <div className="btn btn_header">
+                <span className="header__price">{totalPrice} руб.</span>
+                <div className="header__cartImg">
+                  <img className="icon" src="/img/shopCart.svg"
+                       alt="shopCart"/>
+                </div>
+                <span className="header__num">{counter}</span>
               </div>
-              <span className="header__num">3</span>
-            </div>
-          </Link>
-        </div>
+            </NavLink>
+          </>
+        }
+      </div>
     </header>
   );
 }

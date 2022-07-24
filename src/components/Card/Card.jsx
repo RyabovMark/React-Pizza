@@ -1,19 +1,20 @@
 import React, {useState} from "react";
 import "./Card.scss"
+import {Link} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {addItem} from "../Redux/Slices/cartSlice";
 
 export default function Card({
                                id,
                                name,
                                price,
                                imageUrl,
-                               category,
-                               rating,
                                sizes,
                                types
                              }) {
-  const [pizzaCount, setPizzaCount] = useState(0);
   const [pizzaType, setPizzaType] = useState(0);
   const [pizzaSize, setPizzaSize] = useState(0);
+  const dispatch = useDispatch();
 
   const typesArr = ["Традиционное", "Тонкое"];
 
@@ -27,28 +28,36 @@ export default function Card({
 
   const onClickSize = (index) => {
     (pizzaSize === index) ? setPizzaSize(0) : setPizzaSize(index);
-  }
+  };
 
   const sizeStyle = (index) => {
     return pizzaSize === index ? "options__text options__text_active" : "options__text";
-  }
+  };
 
-  const onClickCount = () => {
-    return setPizzaCount(pizzaCount + 1);
-  }
+  //UUID
 
-  const imgSize = (pizzaSize) => {
-    return (pizzaSize === 0) ? "card__img card__img_small" :
-      (pizzaSize === 1) ? "card__img card__img_medium" : "card__img" +
-        " card__img_large"
+  const onClickAdd = () => {
+    const type = typesArr[pizzaType];
+    const size = sizes[pizzaSize];
+    const item = {
+      id: name + type + size,
+      name,
+      price,
+      imageUrl,
+      type,
+      size,
+    };
+    dispatch(addItem(item));
   }
 
   return (
     <div id={id} className="card">
-      <div className="card__img">
-        <img className={imgSize(pizzaSize)} src={imageUrl} alt="1"/>
-      </div>
-      <h3>{name}</h3>
+      <Link to={`/pizza/${id}`}>
+        <div>
+          <img className="card__img" src={imageUrl} alt="1"/>
+        </div>
+      </Link>
+        <h3>{name}</h3>
       <div className="card__options">
         <div className="card__types">
           {types.map((type, index) => (
@@ -75,10 +84,9 @@ export default function Card({
       </div>
       <div className="card__total">
         <b>От {price} ₽</b>
-        <div className="btn btn_add" onClick={onClickCount}>
+        <div className="btn btn_add" onClick={() => onClickAdd()}>
           <img src="/img/plus.svg" alt="plus"/>
           <span>Добавить</span>
-          <i className="card__count">{pizzaCount}</i>
         </div>
       </div>
     </div>

@@ -1,37 +1,87 @@
-import React, {useState, useEffect, useContext} from "react";
+import React, {useEffect} from "react";
 import Card from "../Card/Card";
-import "./Home.scss"
 import Loader from "../Data/Loader";
 import Navigation from "../Navigation/Navigation";
 import Pagination from "../Pagination/Pagination";
-import {AppContext} from "../../App";
-import {useSelector} from "react-redux";
-import axios from "axios";
-
+import "./Home.scss"
+import {useDispatch, useSelector} from "react-redux";
+import {fetchPizzas, selectedPizza} from "../Redux/Slices/pizzasSlice"
+import {useSearchParams} from "react-router-dom";
+import {selectedFilter} from "../Redux/Slices/filterSlice";
 
 export default function Home() {
-  const {searchValue} = useContext(AppContext)
-  const {categoriesId, sortType} = useSelector(state => state.filter);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const dispatch = useDispatch();
 
-  const [items, setItems] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
+  const {
+    categoriesId,
+    sortProperty,
+    currentPage,
+    searchValue,
+  } = useSelector(selectedFilter);
 
-  const order = sortType.sortProperty.includes('-') ? 'asc' : 'desc';
-  const sortBy = sortType.sortProperty.replace('-', '');
-  const category = categoriesId > 0 ? `category=${categoriesId}` : '';
-  const numPage = searchValue === '' ? `page=${currentPage}&limit=3&` : '';
-  const search = searchValue > 0 ? `&search=${searchValue}` : '';
+  const {items, status} = useSelector(selectedPizza);
 
   useEffect(() => {
-    axios
-      .get(`https://62b626ae42c6473c4b403a58.mockapi.io/pizzas?${category}&${numPage}&sortBy=${sortBy}&order=${order}${search}`)
-      .then((response) => {
-          setItems(response.data);
-          setIsLoading(false);
-        });
+    setSearchParams({
+      categoriesId,
+      sortProperty,
+      currentPage,
+      searchValue,
+    })
+  }, [categoriesId, currentPage, searchValue, setSearchParams, sortProperty]);
 
-  }, [categoriesId, category, order, search, searchValue, sortBy, currentPage]);
+  // useEffect(() => {
+  //   dispatch(setFilters(
+  //     {
+  //       categoriesId: +searchParams.get("categoriesId" || categoriesId),
+  //       sortProperty: searchParams.get("sortProperty" || sortProperty),
+  //       currentPage: +searchParams.get("currentPage" || currentPage),
+  //       searchValue: searchParams.get("searchValue" || searchValue),
+  //     }
+  //   ));
+  // }, []);
+
+  useEffect(() => {
+      const order = sortProperty?.includes('-') ? 'asc' : 'desc';
+      const sortBy = sortProperty?.replace('-', '');
+      const category = categoriesId > 0 ? `category=${categoriesId}` : '';
+      const numPage = searchValue === '' ? `page=${currentPage}&limit=4` : '';
+      const search = searchValue ? `&search=${searchValue}` : '';
+
+      function getPizzas() {
+        dispatch(fetchPizzas({
+            order,
+            sortBy,
+            category,
+            numPage,
+            search
+          })
+        );
+      }
+      getPizzas();
+    }, [categoriesId, currentPage, dispatch, searchValue, sortProperty]
+  );
+
+  const skeletonArray = Array(4)
+    .fill({})
+    .map((_, index) => <Loader key={index}/>);
+
+  const itemsArr = items.filter((item) =>
+    item.name.toLowerCase().includes(searchValue.toLowerCase())).map(obj => (
+    <
+      Card
+      id={obj.id}
+      key={obj.id}
+      name={obj.name}
+      price={obj.price}
+      imageUrl={obj.imageUrl}
+      category={obj.category}
+      rating={obj.rating}
+      sizes={obj.sizes}
+      types={obj.types}
+    />
+  ));
 
   return (
     <>
@@ -39,30 +89,12 @@ export default function Home() {
       <main className="main">
         <h2>Все пиццы</h2>
         <div className="main__container">
-          {
-            isLoading ?
-              Array(8)
-                .fill({})
-                .map((_, index) => <Loader key={index}/>)
-              : items.filter((item) => item.name.toLowerCase().includes(searchValue.toLowerCase())).map(obj => (
-                <
-                  Card
-                  id={obj.id}
-                  key={obj.id}
-                  name={obj.name}
-                  price={obj.price}
-                  imageUrl={obj.imageUrl}
-                  category={obj.category}
-                  rating={obj.rating}
-                  sizes={obj.sizes}
-                  types={obj.types}
-                />
-              ))
-          }
+          {status === "request is loading" ? skeletonArray : itemsArr}
         </div>
-        {!searchValue &&
-          <Pagination onChangePage={number => setCurrentPage(number)}/>}
+        {!searchValue && <Pagination/>}
       </main>
     </>
   );
 }
+
+

@@ -1,32 +1,32 @@
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import './Navigation.scss'
 import {useSelector, useDispatch} from "react-redux";
 import {setCategoriesId, setSortType} from "../Redux/Slices/filterSlice";
 
+export const sortList = [
+  {name: "Популярности (DESC)", sortProperty: "rating", id: 0},
+  {name: "Популярности (ASC)", sortProperty: "-rating", id: 1},
+  {name: "Цене (DESC)", sortProperty: "price", id: 2},
+  {name: "Цене (ASC)", sortProperty: "-price", id: 3},
+  {name: "Алфавиту (DESC)", sortProperty: "name", id: 4},
+  {name: "Алфавиту (ASC)", sortProperty: "-name", id: 5}
+];
+
 export default function Navigation() {
   const dispatch = useDispatch();
-
+  const {categoriesId, sortProperty} = useSelector(state => state.filter);
   const [isVisiblePopup, setIsVisiblePopup] = useState(false);
   const [isVisibleFilter, setIsVisibleFilter] = useState(false);
-
-  const {categoriesId, sortType} = useSelector(state => state.filter);
-
   const categories = ["Все", "Мясные", "Вегетарианская", "Гриль", "Острые", "Закрытые"];
-  const sortList = [
-    {name: "Популярности (DESC)", sortProperty: "rating", id: 0},
-    {name: "Популярности (ASC)", sortProperty: "-rating", id: 1},
-    {name: "Цене (DESC)", sortProperty: "price", id: 2},
-    {name: "Цене (ASC)", sortProperty: "-price", id: 3},
-    {name: "Алфавиту (DESC)", sortProperty: "name", id: 4},
-    {name: "Алфавиту (ASC)", sortProperty: "-name", id: 5}
-  ];
+  const sortRef = useRef();
+  const filterRef = useRef();
 
   const arrowStyle = (state) => {
     return state ? "sort__open-arrow" : 'sort__close-arrow'
   }
 
   const sortStyle = (property) => {
-    return (property === sortType.sortProperty) ? "sort__item sort__item_active" : "sort__item";
+    return (property === sortProperty) ? "sort__item sort__item_active" : "sort__item";
   }
 
   const categoriesStyle = (index) => {
@@ -43,16 +43,12 @@ export default function Navigation() {
 
   const onClickCategories = (index) => {
     (categoriesId === index) ? onChangeCategories(0) : onChangeCategories(index);
-    console.log(categoriesId);
   };
 
   const onClickSort = (obj, state) => {
-    (sortType === obj) ? onChangeSort({
-        name: "Популярности",
-        sortProperty: "rating",
-        id: 0
-      })
-      : onChangeSort(obj);
+    if (sortProperty !== obj.sortProperty)
+      onChangeSort(obj.sortProperty);
+    // (sortProperty !== obj.sortProperty) ? onChangeSort(obj.sortProperty)
     state(false);
   };
 
@@ -60,6 +56,35 @@ export default function Navigation() {
     (categoriesId === index) ? onChangeCategories(0) : onChangeCategories(index);
     state(false);
   };
+
+  const findSortItem = () => {
+    const item = sortList.filter(item => item.sortProperty === sortProperty);
+    return item[0].name;
+  }
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.path.includes(sortRef.current)) {
+        setIsVisiblePopup(false);
+      }
+    };
+    document.body.addEventListener('click', handleClickOutside);
+
+    return () => document.body.removeEventListener('click', handleClickOutside);
+
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.path.includes(filterRef.current)) {
+        setIsVisibleFilter(false);
+      }
+    };
+    document.body.addEventListener('click', handleClickOutside);
+
+    return () => document.body.removeEventListener('click', handleClickOutside);
+
+  }, []);
 
   return (
     <nav className="nav">
@@ -79,7 +104,7 @@ export default function Navigation() {
           }
         </ul>
       </div>
-      <div className="sort">
+      <div className="sort" ref={sortRef}>
         <div className="sort__label">
           <div className="sort__img">
             <img
@@ -94,7 +119,7 @@ export default function Navigation() {
               className='sort__choice'
               onClick={() => setIsVisiblePopup(!isVisiblePopup)}
             >
-              {sortType.name}
+              {findSortItem()}
             </span>
           </div>
         </div>
@@ -117,7 +142,7 @@ export default function Navigation() {
           </div>
         }
       </div>
-      <div className="sort sort_filter">
+      <div className="sort sort_filter" ref={filterRef}>
         <div className="sort__label">
           <div className="sort__img">
             <img
